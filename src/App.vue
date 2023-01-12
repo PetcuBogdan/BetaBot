@@ -29,13 +29,23 @@
     />
   </div>
   <div v-if="num === 3" class="container2">
-    <AddProfile @add-profile="addProfile" :v-model="profiles" />
+    <AddProfile
+      :profiles="profiles"
+      @add-profile="addProfile"
+      @edit-profile="editProfile"
+      @delete-profile="deleteProfile"
+    />
   </div>
   <div v-if="num === 5" class="container2">
-    <AddCard />
+    <AddCard
+      :cards="cards"
+      @add-card="addCard"
+      @edit-card="editCard"
+      @delete-card="deleteCard"
+    />
   </div>
   <div v-if="num === 2" class="container2">
-    <CreateTask @create-task="addTask" />
+    <CreateTask @create-task="addTask" :profiles="profiles" :cards="cards" />
   </div>
 </template>
 
@@ -45,7 +55,7 @@ import Button from "./components/Button";
 import AddProfile from "./components/AddProfile";
 import AddCard from "./components/AddCard";
 import CreateTask from "./components/CreateTask.vue";
-
+import axios from "axios";
 export default {
   name: "App",
   components: {
@@ -60,6 +70,7 @@ export default {
       num: 1,
       tasks: [],
       profiles: [],
+      cards: [],
     };
   },
   methods: {
@@ -69,64 +80,52 @@ export default {
     deleteTask(id) {
       this.tasks = this.tasks.filter((task) => task.id !== id);
     },
-    AddProfile(profile) {
-      this.profiles = [...this.profiles, profile];
-      console.log(profile.fname);
+    addProfile(profile) {
+      this.profiles.push(profile);
+
+      //axios.post('http:3000/profile/add', profile)
+      // axios.get('http:3000/profile/list')
+    },
+    editProfile(profile) {
+      const index = this.profiles.findIndex(
+        (element) => element.id === profile.id
+      );
+      this.profiles.splice(index, 1, profile);
+    },
+    deleteProfile(profile) {
+      const index = this.profiles.findIndex(
+        (element) => element.id === profile.id
+      );
+      this.profiles.splice(index, 1);
+    },
+    addCard(card) {
+      this.cards.push(card);
+    },
+    editCard(card) {
+      const index = this.cards.findIndex((element) => element.id === card.id);
+      this.cards.splice(index, 1, card);
+    },
+    deleteCard(card) {
+      const index = this.cards.findIndex((element) => element.id === card.id);
+      this.cards.splice(index, 1);
+    },
+    async initCards() {
+      let response = await axios.get("http://localhost:9000/cards");
+      this.cards = [...response?.data];
+    },
+    async initProfiles() {
+      let response = await axios.get("http://localhost:9000/profiles");
+      this.profiles = [...response?.data];
+    },
+    async initTasks() {
+      let response = await axios.get("http://localhost:9000/tasks");
+      this.tasks = [...response?.data];
     },
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        task: "Task1",
-        shop: "Supreme",
-        product: "Air Force 1",
-        size: "43",
-        color: "white",
-        profile: "profile1",
-        card: "card1",
-        status: "paused",
-        reminder: true,
-      },
-      {
-        id: 2,
-        task: "Task2",
-        shop: "Nike",
-        product: "Jordan 1",
-        size: "43",
-        color: "blue",
-        profile: "profile1",
-        card: "card1",
-        status: "paused",
-        reminder: true,
-      },
-    ];
-    this.profiles = [
-      {
-        fname: "a",
-        lname: "b",
-        email: "x",
-        phone: "x",
-        address: "x",
-        address2: "x",
-        postcode: "x",
-        city: "x",
-        county: "x",
-        country: "x",
-      },
-      {
-        fname: "b",
-        lname: "b",
-        email: "y",
-        phone: "y",
-        address: "y",
-        address2: "y",
-        postcode: "y",
-        city: "y",
-        county: "y",
-        country: "y",
-      },
-    ];
+  async created() {
+    this.initCards();
+    this.initProfiles();
+    this.initTasks();
   },
 };
 </script>
@@ -140,6 +139,7 @@ export default {
 }
 body {
   font-family: "Poppins", sans-serif;
+  background: rgb(31, 31, 31);
 }
 .container {
   max-width: 800px;
@@ -157,8 +157,8 @@ body {
   margin: 60px auto;
   margin-top: 30px;
   overflow: hidden;
-  height: 600px;
-  border: 1px solid black;
+  height: 800px;
+  border: 0px solid black;
   padding: 10px;
   border-radius: 5px;
 }

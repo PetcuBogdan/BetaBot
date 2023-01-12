@@ -1,5 +1,9 @@
 <template>
-  <select>
+  <select
+    id="countrySelect"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+  >
     <option value="0" label="Select country" selected class="selectDefault">
       Select a country ...
     </option>
@@ -262,6 +266,8 @@
 <script>
 export default {
   name: "CountrySelect",
+  props: ["modelValue"],
+  emits: ["update:modelValue"],
 };
 </script>
 
