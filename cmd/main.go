@@ -68,9 +68,9 @@ log.Fatal(http.ListenAndServe(":9000", mux))
 }
 
 func main() {
-	// category := []string{"CK1 Palace", "Jackets", "Shirting", "Tops", "Bottoms", "Tracksuits", "Hoods", "Sweatshirts", "T-Shirts", "Hats", "Footwear", "Bags", "Accessories", "Hardware"}
-	// for _,cat := range category{
-	// 	getProductsByCategory(cat)
-	// }
+	category := []string{"CK1 Palace", "Jackets", "Shirting", "Tops", "Bottoms", "Tracksuits", "Hoods", "Sweatshirts", "T-Shirts", "Hats", "Footwear", "Bags", "Accessories", "Hardware"}
+	for _,cat := range category{
+	 	getProductsByCategory(cat)
+	}
 	initializeRouter()
 }

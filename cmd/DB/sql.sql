@@ -33,3 +33,5 @@
 --VALUES("GORE-TEX Camp Cap", "hats", "Silver Olive Blue Black")
 
 --delete from supreme where productName='GOTE-TEX Camp Cap'
+
+DROP TABLE palace

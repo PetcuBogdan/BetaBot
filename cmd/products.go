@@ -4,46 +4,49 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
+
+	"github.com/gocolly/colly"
 )
 
-// func getProductsByCategory(category string) {
-// 	products := []string{}
-// 	c := colly.NewCollector(colly.AllowedDomains("shop-eu.palaceskateboards.com","www.shop-eu.palaceskateboards.com"))
-// 	c.OnHTML("div[id=content]", func(h *colly.HTMLElement) {
-// 		h2 := h.DOM.Find("div[id=product-loop]").First().SetAttr("scrollTop","100000000")
-// 		str := h2.Text()
-// 		words := []string{}
-// 		splitted := strings.Split(str, " \n")
-// 		for _, word := range splitted {
-// 			word = strings.TrimSpace(word)
-// 			if word != "" {
-// 			words = append(words, word)
-// 			}
-// 		}
-// 		for _,product := range words {
-// 			if strings.Contains(product,"€") || product == "SOLD OUT"{
-// 				continue
-// 			}else{
-// 				products = append(products, product)
-// 			}
-// 		}
-// 		for _,product := range products {
-// 			if strings.Contains(product, "€"){
-// 				fmt.Println("pret")
-// 			}else{
-// 				fmt.Println(product)
-// 			}
-// 		}
-// 	})
+func getProductsByCategory(category string) {
+	products := []string{}
+	c := colly.NewCollector(colly.AllowedDomains("shop-eu.palaceskateboards.com","www.shop-eu.palaceskateboards.com"))
+	c.OnHTML("div[id=content]", func(h *colly.HTMLElement) {
+		h2 := h.DOM.Find("div[id=product-loop]").First().SetAttr("scrollTop","100000000")
+		str := h2.Text()
+		words := []string{}
+		splitted := strings.Split(str, " \n")
+		for _, word := range splitted {
+			word = strings.TrimSpace(word)
+			if word != "" {
+			words = append(words, word)
+			}
+		}
+		for _,product := range words {
+			if strings.Contains(product,"€") || product == "SOLD OUT"{
+				continue
+			}else{
+				products = append(products, product)
+			}
+		}
+		for _,product := range products {
+			if strings.Contains(product, "€"){
+				fmt.Println("pret")
+			}else{
+				fmt.Println(product)
+			}
+		}
+	})
 
-// 	c.OnRequest(func(r *colly.Request) {
-// 		fmt.Println("visiting", r.URL.String())
-// 	})
+	c.OnRequest(func(r *colly.Request) {
+		fmt.Println("visiting", r.URL.String())
+	})
 
-// 	c.Visit("https://shop-eu.palaceskateboards.com/collections/"+category)
+	c.Visit("https://shop-eu.palaceskateboards.com/collections/"+category)
 
-// 	addProductPalace(products, category)
-// }
+	addProductPalace(products, category)
+}
 
 
 func getPalaceProductsList(w http.ResponseWriter, r *http.Request) {
